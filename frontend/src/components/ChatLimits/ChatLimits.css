@@ -1,0 +1,10 @@
+.chat-limits {
+  display: flex;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+  color: #6a737d;
+}
+
+.chat-limits .label {
+  font-weight: bold;
+}

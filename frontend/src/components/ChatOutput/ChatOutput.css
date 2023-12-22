@@ -1,0 +1,27 @@
+output.chat-output > ul {
+  flex-grow: 10;
+  padding-bottom: 50px;
+  list-style: none;
+  padding: 0;
+}
+
+output.chat-output > ul > li {
+  text-align: left;
+}
+
+output.chat-output > ul > li > :first-child:before {
+  content: '🤖';
+  margin-right: 0.5rem;
+}
+
+output.chat-output > ul > li.user > :first-child:before {
+  content: '🧑';
+}
+
+output.chat-output > ul > li.system > :first-child:before {
+  content: '⚙️';
+}
+
+output.chat-output {
+  overflow-y: auto;
+}

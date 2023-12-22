@@ -1,0 +1,40 @@
+.chat-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.chat-form #form {
+  display: flex;
+  column-gap: 0.25rem;
+  min-height: 54px;
+}
+
+.chat-form #form button:disabled,
+.chat-form #form textarea:disabled {
+  pointer-events: none;
+}
+
+.chat-form .chat-form-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.chat-form .chat-form-input {
+  flex-grow: 1;
+}
+
+.chat-form .tools {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.chat-form-input {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.chat-form-input label {
+  text-align: start;
+}
