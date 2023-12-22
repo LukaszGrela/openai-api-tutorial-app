@@ -1,0 +1,12 @@
+{
+  "name": "openai-api-tutorial-app",
+  "version": "1.0.0",
+  "description": "Test app of the OpenAI API",
+  "keywords": [
+    "OpenAI",
+    "AI",
+    "ChatGPT"
+  ],
+  "author": "Lukasz 'Severiaan' Grela",
+  "license": "MIT"
+}
