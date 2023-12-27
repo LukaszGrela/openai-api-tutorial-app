@@ -21,6 +21,11 @@ export type TStore = Store<TAppState, Action> & { dispatch: TDispatch };
 
 export type TResponse = { id: string | number; role: string; content: string };
 
+export type THistoryResponse = {
+  list: TResponse[];
+  rateLimit: TLimits;
+};
+
 export type TError = {
   name: string;
   message: string;

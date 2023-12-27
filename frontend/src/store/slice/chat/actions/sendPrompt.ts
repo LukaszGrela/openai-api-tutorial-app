@@ -4,6 +4,7 @@ import type {
   TChatSendPromptStart,
   TChatSendPromptFinish,
   TChatSendPromptFail,
+  TChatSendPrompt,
 } from './types';
 import { sendPrompt } from '../../../../api/sendPrompt';
 import type { TPromptResponse } from '../../../../api/types';
@@ -30,13 +31,11 @@ export const sendPromptActionFailed = (
 });
 
 type TPromise = Promise<TPromptResponse | TError>;
-type TAction =
-  | TChatSendPromptStart
-  | TChatSendPromptFinish
-  | TChatSendPromptFail;
 
 const sendPromptAction =
-  (prompt: string): ThunkAction<TPromise, TAppState, unknown, TAction> =>
+  (
+    prompt: string
+  ): ThunkAction<TPromise, TAppState, unknown, TChatSendPrompt> =>
   async (dispatch): TPromise => {
     dispatch(sendPromptActionStarted(prompt));
 
