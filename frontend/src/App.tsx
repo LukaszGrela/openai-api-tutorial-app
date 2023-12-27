@@ -8,7 +8,6 @@ import store from './store';
 import { useAppDispatch, useAppSelector } from './store/slice/hooks';
 import {
   initChatAction,
-  restartChatAction,
   sendPromptAction,
   sendSystemPromptAction,
 } from './store/slice/chat';
@@ -20,6 +19,7 @@ function App() {
   const loading = useAppSelector(
     (state) => state.history.loading || state.chat.loading
   );
+  const error = useAppSelector((state) => state.chat.error?.message);
 
   useEffect(() => {
     dispatch(initChatAction());
@@ -32,10 +32,6 @@ function App() {
     [dispatch]
   );
 
-  const handleRestart = useCallback(async () => {
-    dispatch(restartChatAction());
-  }, [dispatch]);
-
   const handleSetSystem = useCallback(
     async ({ prompt }: TChatFormData) => {
       dispatch(sendSystemPromptAction(prompt));
@@ -47,11 +43,11 @@ function App() {
     <main className='app'>
       <h1>ChatGPT for Web Developers</h1>
       <ChatForm
-        disable={loading}
+        disable={loading || !!error}
         onSubmit={handleSubmit}
-        onReset={handleRestart}
         onSetSystem={handleSetSystem}
       />
+      {!!error && <p className='error'>{error}</p>}
       <ChatLimits />
       <ChatOutput autoScroll />
     </main>

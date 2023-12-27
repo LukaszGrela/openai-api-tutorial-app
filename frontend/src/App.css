@@ -21,3 +21,7 @@ main.app {
 .chat-output {
   flex-grow: 3;
 }
+
+.error {
+  color: red;
+}
