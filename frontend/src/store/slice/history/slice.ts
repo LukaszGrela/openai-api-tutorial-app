@@ -24,6 +24,11 @@ const slice = (
     | THistoryActionSet
 ): IHistoryState => {
   switch (action.type) {
+    case 'history/SET':
+      return {
+        ...state,
+        list: [...state.list, action.payload],
+      };
     default:
       break;
   }

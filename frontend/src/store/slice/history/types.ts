@@ -17,6 +17,7 @@ export type THistoryActionRemove = {
  */
 export type THistoryActionSet = {
   type: 'history/SET';
+  payload: THistoryItem;
 };
 
 /**

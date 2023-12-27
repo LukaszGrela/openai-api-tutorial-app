@@ -63,6 +63,26 @@ const slice = (
         loading: false,
       };
 
+    case 'chat/SEND_SYSTEM_PROMPT/start':
+    case 'chat/RESTART/start':
+      return {
+        ...state,
+        loading: true,
+      };
+    case 'chat/SEND_SYSTEM_PROMPT/fail':
+    case 'chat/RESTART/fail':
+      return {
+        ...state,
+        loading: false,
+      };
+    case 'chat/SEND_SYSTEM_PROMPT/finish':
+    case 'chat/RESTART/finish':
+      return {
+        ...state,
+        loading: false,
+        list: action.payload.list,
+      };
+
     default:
       break;
   }

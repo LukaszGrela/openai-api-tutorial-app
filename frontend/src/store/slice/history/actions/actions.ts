@@ -3,10 +3,12 @@ import {
   THistoryActionClear,
   THistoryActionRemove,
   THistoryActionSet,
+  THistoryItem,
 } from '../types';
 
-export const setHistory = (): THistoryActionSet => ({
+export const setHistory = (payload: THistoryItem): THistoryActionSet => ({
   type: 'history/SET',
+  payload,
 });
 
 export const addHistoryEntry = (): THistoryActionAdd => ({
