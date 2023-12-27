@@ -8,6 +8,7 @@ import type {
 import type { TAppState, TError } from '../../../types';
 import { getHistory } from '../../../../api/getHistory';
 import type { THistoryResponse } from '../../../../api/types';
+import { toError } from '../../../utils';
 
 export const initChatActionStarted = (): TInitChatActionStart => ({
   type: 'chat/INIT/start',
@@ -55,11 +56,7 @@ const initChatAction =
       dispatch(initChatActionFinished(data));
       return await Promise.resolve(data);
     } catch (error) {
-      const payload = {
-        name: (error as Error).name,
-        message: (error as Error).message,
-        stack: (error as Error).stack,
-      };
+      const payload = toError(error);
       dispatch(initChatActionFailed(payload));
       return await Promise.reject(payload);
     }

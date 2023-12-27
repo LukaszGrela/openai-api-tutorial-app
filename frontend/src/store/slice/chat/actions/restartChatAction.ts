@@ -8,6 +8,7 @@ import type {
 import type { TAppState, TError } from '../../../types';
 import { clearHistory } from '../../../../api/clearHistory';
 import type { THistoryResponse } from '../../../../api/types';
+import { toError } from '../../../utils';
 
 export const restartChatActionStarted = (): TRestartActionStart => ({
   type: 'chat/RESTART/start',
@@ -41,11 +42,7 @@ const restartChatAction =
       dispatch(restartChatActionFinished(data));
       return await Promise.resolve(data);
     } catch (error) {
-      const payload = {
-        name: (error as Error).name,
-        message: (error as Error).message,
-        stack: (error as Error).stack,
-      };
+      const payload = toError(error);
       dispatch(restartChatActionFailed(payload));
       return await Promise.reject(payload);
     }

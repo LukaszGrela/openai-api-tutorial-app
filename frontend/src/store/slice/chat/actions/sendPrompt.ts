@@ -8,6 +8,7 @@ import type {
 } from './types';
 import { sendPrompt } from '../../../../api/sendPrompt';
 import type { TPromptResponse } from '../../../../api/types';
+import { toError } from '../../../utils';
 
 export const sendPromptActionStarted = (
   payload: string
@@ -44,11 +45,8 @@ const sendPromptAction =
       dispatch(sendPromptActionFinished(data));
       return await Promise.resolve(data);
     } catch (error) {
-      const payload = {
-        name: (error as Error).name,
-        message: (error as Error).message,
-        stack: (error as Error).stack,
-      };
+      const payload = toError(error);
+      console.log(error);
       dispatch(sendPromptActionFailed(payload));
       return await Promise.reject(payload);
     }

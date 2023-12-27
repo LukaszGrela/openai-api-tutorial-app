@@ -37,13 +37,21 @@ const slice = (
       return {
         ...state,
         loading: false,
+        error: action.payload,
       };
     case 'chat/SEND_PROMPT/finish':
       return {
         ...state,
+        error: undefined,
         loading: false,
         // chat gpt response
-        list: [...state.list, action.payload.message],
+        list: [
+          ...state.list,
+          {
+            ...action.payload.message,
+            finishReason: action.payload.finishReason,
+          },
+        ],
       };
 
     case 'chat/INIT/start':
@@ -56,11 +64,13 @@ const slice = (
         initiated: true,
         list: action.payload.list,
         loading: false,
+        error: undefined,
       };
     case 'chat/INIT/fail':
       return {
         ...state,
         loading: false,
+        error: action.payload,
       };
 
     case 'chat/SEND_SYSTEM_PROMPT/start':
@@ -74,6 +84,7 @@ const slice = (
       return {
         ...state,
         loading: false,
+        error: action.payload,
       };
     case 'chat/SEND_SYSTEM_PROMPT/finish':
     case 'chat/RESTART/finish':
@@ -81,12 +92,12 @@ const slice = (
         ...state,
         loading: false,
         list: action.payload.list,
+        error: undefined,
       };
 
     default:
-      break;
+      return state;
   }
-  return state;
 };
 
 export default slice;

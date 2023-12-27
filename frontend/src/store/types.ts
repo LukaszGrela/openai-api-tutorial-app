@@ -11,5 +11,6 @@ export type TStore = Store<TAppState, Action> & { dispatch: TDispatch };
 export type TError = {
   name: string;
   message: string;
+  code?: string;
   stack?: string | undefined;
 };
