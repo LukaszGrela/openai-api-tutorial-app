@@ -11,5 +11,10 @@ export const getHistory = async () => {
     method: 'GET',
   });
 
+  if (!response.ok) {
+    const error = (await response.json()).error;
+    return Promise.reject(error);
+  }
+
   return response.json() as Promise<THistoryResponse>;
 };

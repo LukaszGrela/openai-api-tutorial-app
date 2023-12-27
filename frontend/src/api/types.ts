@@ -1,4 +1,14 @@
-export type TResponse = { id: string | number; role: string; content: string };
+export type TResponse = {
+  id: string | number;
+  role: string;
+  content: string;
+  finishReason?:
+    | 'stop'
+    | 'length'
+    | 'tool_calls'
+    | 'content_filter'
+    | 'function_call';
+};
 
 export type TLimits = {
   requestsLimit: number;
@@ -17,4 +27,10 @@ export type THistoryResponse = {
 export type TPromptResponse = {
   message: TResponse;
   rateLimit: TLimits;
+  finishReason?:
+    | 'stop'
+    | 'length'
+    | 'tool_calls'
+    | 'content_filter'
+    | 'function_call';
 };

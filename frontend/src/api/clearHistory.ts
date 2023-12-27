@@ -14,6 +14,11 @@ export const clearHistory = async (cold = true) => {
     body: JSON.stringify({ cold }),
   });
 
+  if (!response.ok) {
+    const error = (await response.json()).error;
+    return Promise.reject(error);
+  }
+
   return response.json() as Promise<THistoryResponse>;
 };
 
@@ -33,6 +38,11 @@ export const clearHistoryAndSetSystem = async (
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ prompt, role, cold }),
   });
+
+  if (!response.ok) {
+    const error = (await response.json()).error;
+    return Promise.reject(error);
+  }
 
   return response.json() as Promise<THistoryResponse>;
 };
