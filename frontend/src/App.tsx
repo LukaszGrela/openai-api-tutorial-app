@@ -1,21 +1,29 @@
 import { useCallback, useEffect, useState } from 'react';
-import { sendPrompt } from './api/sendPrompt';
 import { ChatForm } from './components/ChatForm';
 import { TChatFormData } from './components/ChatForm/types';
 import { ChatOutput } from './components/ChatOutput';
-import { clearHistory, clearHistoryAndSetSystem } from './api/clearHistory';
-import { TResponse } from './components/ChatOutput/types';
-import './App.css';
-import { getHistory } from './api/getHistory';
 import { TLimits } from './api/types';
 import { ChatLimits } from './components/ChatLimits';
+import { Provider } from 'react-redux';
+import store from './store';
+import { useAppDispatch, useAppSelector } from './store/slice/hooks';
+import {
+  initChatAction,
+  restartChatAction,
+  sendPromptAction,
+  sendSystemPromptAction,
+} from './store/slice/chat';
 
-let id = 0;
+import './App.css';
 
 function App() {
-  const [loading, setLoading] = useState(false);
-  const [responses, addResponse] = useState<TResponse[]>([]);
-  const [limits, setLimits] = useState<TLimits>({
+  const dispatch = useAppDispatch();
+  const loading = useAppSelector(
+    (state) => state.history.loading || state.chat.loading
+  );
+  const responses = useAppSelector(({ chat }) => chat.list);
+
+  const [limits] = useState<TLimits>({
     requestsLimit: 0,
     requestsRemaining: 0,
     tokensLimit: 0,
@@ -25,74 +33,25 @@ function App() {
   });
 
   useEffect(() => {
-    const fetchInitHistory = async () => {
-      setLoading(true);
-      try {
-        const { list, rateLimit } = await getHistory();
-        setLimits(rateLimit);
-        addResponse(list);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    };
+    dispatch(initChatAction());
+  }, [dispatch]);
 
-    fetchInitHistory();
-  }, []);
-
-  const handleSubmit = useCallback(async ({ prompt }: TChatFormData) => {
-    console.log('Chat', prompt);
-    addResponse((responses) => [
-      ...responses,
-      { id: ++id, role: 'user', content: prompt },
-    ]);
-    setLoading(true);
-    try {
-      const { message, rateLimit } = await sendPrompt(prompt);
-      console.log(message);
-      setLimits(rateLimit);
-      addResponse((responses) => [...responses, message]);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const handleSubmit = useCallback(
+    async ({ prompt }: TChatFormData) => {
+      dispatch(sendPromptAction(prompt));
+    },
+    [dispatch]
+  );
 
   const handleRestart = useCallback(async () => {
-    setLoading(true);
-    try {
-      const { list, rateLimit } = await clearHistory();
-      console.log(list);
-      setLimits(rateLimit);
-      addResponse(list);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+    dispatch(restartChatAction());
+  }, [dispatch]);
 
   const handleSetSystem = useCallback(
-    async ({ prompt, isSilly }: TChatFormData) => {
-      setLoading(true);
-      try {
-        const { list, rateLimit } = await clearHistoryAndSetSystem(
-          prompt,
-          'system',
-          !isSilly
-        );
-        console.log(list);
-        setLimits(rateLimit);
-        addResponse(list);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
+    async ({ prompt }: TChatFormData) => {
+      dispatch(sendSystemPromptAction(prompt));
     },
-    []
+    [dispatch]
   );
 
   return (
@@ -110,4 +69,12 @@ function App() {
   );
 }
 
-export default App;
+const AppWrapper = () => {
+  return (
+    <Provider store={store}>
+      <App />
+    </Provider>
+  );
+};
+
+export default AppWrapper;
