@@ -28,9 +28,15 @@ const ChatOutput: FC<IProps> = ({ autoScroll }) => {
   return (
     <output className={className}>
       <ul>
-        {responses.map(({ role, content, id }) => (
+        {responses.map(({ role, content, id, finishReason }) => (
           <li className={role} key={id}>
             <Markdown markdown={content} />
+            {finishReason === 'content_filter' && (
+              <Markdown markdown='**Warning** answer was filtered by Open API' />
+            )}
+            {finishReason === 'length' && (
+              <Markdown markdown='**Warning** maximum number of tokens specified in the request was reached, please **Restart** the chat.' />
+            )}
           </li>
         ))}
       </ul>
