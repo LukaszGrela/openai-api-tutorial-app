@@ -10,6 +10,7 @@
 }
 
 .chat-form #form button:disabled,
+button.restart-chat:disabled,
 .chat-form #form textarea:disabled {
   pointer-events: none;
 }

@@ -1,13 +1,13 @@
 import { FC, FormEvent, useCallback, useState } from 'react';
 import { ChatTemperature } from '../ChatConfiguration';
 import { IProps } from './types';
+import { RestartChat } from './tools';
 
 import './ChatForm.css';
 
 const ChatForm: FC<IProps> = ({
   onSubmit,
   disable,
-  onReset,
   onSetSystem,
 }): JSX.Element => {
   const [prompt, setPrompt] = useState('');
@@ -29,12 +29,6 @@ const ChatForm: FC<IProps> = ({
     [onSubmit, prompt]
   );
 
-  const handleReset = useCallback(() => {
-    setPrompt('');
-
-    onReset?.();
-  }, [onReset]);
-
   const handleSetSystem = useCallback(() => {
     setPrompt(''); // reset on submit
 
@@ -54,7 +48,6 @@ const ChatForm: FC<IProps> = ({
             onChange={handleChange}
             disabled={disable}
           ></textarea>
-          <ChatTemperature />
         </div>
         <span className='chat-form-buttons'>
           <button type='submit' disabled={disable || !prompt}>
@@ -69,10 +62,11 @@ const ChatForm: FC<IProps> = ({
           </button>
         </span>
       </form>
+      <div className='tools configuration'>
+        <ChatTemperature />
+      </div>
       <div className='tools'>
-        <button type='button' onClick={handleReset} disabled={disable}>
-          Restart
-        </button>
+        <RestartChat />
       </div>
     </div>
   );

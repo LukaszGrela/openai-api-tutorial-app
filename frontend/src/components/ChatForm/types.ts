@@ -6,5 +6,4 @@ export interface IProps {
   disable?: boolean;
   onSubmit: (data: TChatFormData) => void;
   onSetSystem: (data: TChatFormData) => void;
-  onReset?: () => void;
 }
