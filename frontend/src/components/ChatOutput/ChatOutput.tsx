@@ -1,22 +1,22 @@
 import { FC, useLayoutEffect } from 'react';
 import { Markdown } from '../Markdown';
 import { IProps } from './types';
+import { useAppSelector } from '../../store/slice/hooks';
 
 import './ChatOutput.css';
 
-const ChatOutput: FC<IProps> = ({ responses, autoScroll }) => {
+const ChatOutput: FC<IProps> = ({ autoScroll }) => {
+  const responses = useAppSelector(({ chat }) => chat.list);
+
   const className = 'chat-output';
   useLayoutEffect(() => {
     if (autoScroll && responses.length) {
-      console.log('AutoScroll', autoScroll);
-      console.log('responses', responses.length);
       const output = document.querySelector<HTMLElement>(
         className
           .split(' ')
           .map((s) => `.${s}`)
           .join('')
       );
-      console.log('output', output);
       output?.scrollTo({
         left: 0,
 
