@@ -1,8 +1,7 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect } from 'react';
 import { ChatForm } from './components/ChatForm';
 import { TChatFormData } from './components/ChatForm/types';
 import { ChatOutput } from './components/ChatOutput';
-import { TLimits } from './api/types';
 import { ChatLimits } from './components/ChatLimits';
 import { Provider } from 'react-redux';
 import store from './store';
@@ -21,16 +20,6 @@ function App() {
   const loading = useAppSelector(
     (state) => state.history.loading || state.chat.loading
   );
-  const responses = useAppSelector(({ chat }) => chat.list);
-
-  const [limits] = useState<TLimits>({
-    requestsLimit: 0,
-    requestsRemaining: 0,
-    tokensLimit: 0,
-    tokensRemaining: 0,
-    tokensUsageBasedLimit: 0,
-    tokensUsageBasedRemaining: 0,
-  });
 
   useEffect(() => {
     dispatch(initChatAction());
@@ -63,8 +52,8 @@ function App() {
         onReset={handleRestart}
         onSetSystem={handleSetSystem}
       />
-      <ChatLimits limits={limits} />
-      <ChatOutput autoScroll responses={responses} />
+      <ChatLimits />
+      <ChatOutput autoScroll />
     </main>
   );
 }
