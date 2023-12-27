@@ -1,6 +1,5 @@
 export type TChatFormData = {
   prompt: string;
-  isSilly?: boolean;
 };
 
 export interface IProps {

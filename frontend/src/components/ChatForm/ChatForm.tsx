@@ -1,4 +1,5 @@
 import { FC, FormEvent, useCallback, useState } from 'react';
+import { ChatTemperature } from '../ChatConfiguration';
 import { IProps } from './types';
 
 import './ChatForm.css';
@@ -10,7 +11,6 @@ const ChatForm: FC<IProps> = ({
   onSetSystem,
 }): JSX.Element => {
   const [prompt, setPrompt] = useState('');
-  const [cold, setCold] = useState(true);
 
   const handleChange: React.ChangeEventHandler<HTMLTextAreaElement> =
     useCallback((e) => {
@@ -19,27 +19,18 @@ const ChatForm: FC<IProps> = ({
       setPrompt(value);
     }, []);
 
-  const handleCheckboxChange: React.ChangeEventHandler<HTMLInputElement> =
-    useCallback((e) => {
-      console.log(e.target.checked);
-      const value = e.target.checked;
-
-      setCold(value);
-    }, []);
-
   const handleSubmit = useCallback(
     async (event: FormEvent<HTMLFormElement>) => {
       event.preventDefault();
 
       setPrompt(''); // reset on submit
-      onSubmit({ prompt, isSilly: !cold });
+      onSubmit({ prompt });
     },
-    [onSubmit, prompt, cold]
+    [onSubmit, prompt]
   );
 
   const handleReset = useCallback(() => {
     setPrompt('');
-    setCold(true);
 
     onReset?.();
   }, [onReset]);
@@ -49,9 +40,8 @@ const ChatForm: FC<IProps> = ({
 
     onSetSystem({
       prompt,
-      isSilly: !cold,
     });
-  }, [cold, onSetSystem, prompt]);
+  }, [onSetSystem, prompt]);
 
   return (
     <div className='chat-form'>
@@ -64,14 +54,7 @@ const ChatForm: FC<IProps> = ({
             onChange={handleChange}
             disabled={disable}
           ></textarea>
-          <label>
-            <input
-              type='checkbox'
-              checked={cold}
-              onChange={handleCheckboxChange}
-            />
-            Cold answers (warm is set to 0.5)
-          </label>
+          <ChatTemperature />
         </div>
         <span className='chat-form-buttons'>
           <button type='submit' disabled={disable || !prompt}>
