@@ -5,8 +5,9 @@ import type {
   TRestartActionFail,
   TRestartAction,
 } from './types';
-import type { TAppState, TError, THistoryResponse } from '../../../types';
+import type { TAppState, TError } from '../../../types';
 import { clearHistory } from '../../../../api/clearHistory';
+import type { THistoryResponse } from '../../../../api/types';
 
 export const restartChatActionStarted = (): TRestartActionStart => ({
   type: 'chat/RESTART/start',

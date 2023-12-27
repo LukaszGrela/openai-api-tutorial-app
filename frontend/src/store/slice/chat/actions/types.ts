@@ -1,5 +1,5 @@
-import type { TPromptResponse } from '../../../../api/types';
-import type { TError, THistoryResponse } from '../../../types';
+import type { TPromptResponse, THistoryResponse } from '../../../../api/types';
+import type { TError } from '../../../types';
 
 export type TChatSendPromptStart = {
   type: 'chat/SEND_PROMPT/start';

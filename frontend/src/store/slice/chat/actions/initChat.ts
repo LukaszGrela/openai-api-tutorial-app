@@ -5,8 +5,9 @@ import type {
   TInitChatActionFinish,
   TInitChatActionStart,
 } from './types';
-import type { TAppState, TError, THistoryResponse } from '../../../types';
+import type { TAppState, TError } from '../../../types';
 import { getHistory } from '../../../../api/getHistory';
+import type { THistoryResponse } from '../../../../api/types';
 
 export const initChatActionStarted = (): TInitChatActionStart => ({
   type: 'chat/INIT/start',

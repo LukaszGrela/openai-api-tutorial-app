@@ -1,4 +1,4 @@
-import type { TResponse } from '../../types';
+import type { TResponse } from '../../../api/types';
 
 /**
  * Add history item
