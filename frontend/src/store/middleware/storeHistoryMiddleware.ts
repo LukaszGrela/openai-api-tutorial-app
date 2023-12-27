@@ -1,4 +1,4 @@
-import { Action, Dispatch, Middleware } from 'redux';
+import { Dispatch, Middleware } from 'redux';
 import { TAppState } from '../types';
 import {
   TChatSendSystemPromptFinish,
@@ -9,7 +9,7 @@ import { setHistory } from '../slice/history';
 const storeHistoryMiddleware: Middleware<
   unknown,
   TAppState,
-  Dispatch<Action>
+  Dispatch<TChatSendSystemPromptFinish | TRestartActionFinish>
 > = (storeApi) => (next) => (action) => {
   const reactToAction = action as
     | TChatSendSystemPromptFinish
