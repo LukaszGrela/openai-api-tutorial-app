@@ -1,4 +1,5 @@
-import { TResponse } from '../components/ChatOutput/types';
+export type TResponse = { id: string | number; role: string; content: string };
+
 export type TLimits = {
   requestsLimit: number;
   requestsRemaining: number;
