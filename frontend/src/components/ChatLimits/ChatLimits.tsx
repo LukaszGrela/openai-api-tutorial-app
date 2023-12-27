@@ -1,8 +1,10 @@
-import { IProps } from './types';
+import { useAppSelector } from '../../store/slice/hooks';
 
 import './ChatLimits.css';
 
-const ChatLimits: React.FC<IProps> = ({ limits }) => {
+const ChatLimits: React.FC = () => {
+  const limits = useAppSelector(({ chatLimits }) => chatLimits);
+
   return (
     <div className='chat-limits'>
       <span>
