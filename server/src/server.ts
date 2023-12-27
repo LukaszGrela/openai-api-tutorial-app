@@ -78,7 +78,7 @@ function getLimits(responseHeaders: Record<string, string[]>): TLimits {
       })
       .asResponse();
 
-    const chat = await response.json();
+    const chat = (await response.json()) as OpenAI.ChatCompletion;
 
     return {
       headers: response.headers.raw(),
@@ -91,7 +91,6 @@ function getLimits(responseHeaders: Record<string, string[]>): TLimits {
     role: 'system' | 'assistant' = 'system',
     cold = true
   ) => {
-    console.log('initHistory', role, cold, content);
     // rest history
     history = content
       ? [{ role, content, id: new Date().getTime() }]
@@ -107,6 +106,8 @@ function getLimits(responseHeaders: Record<string, string[]>): TLimits {
     rateLimit = getLimits(headers);
 
     history.push({ id: chat.id, ...chat.choices[0].message });
+
+    return chat.usage;
   };
 
   server.use(express.json());
@@ -121,10 +122,18 @@ function getLimits(responseHeaders: Record<string, string[]>): TLimits {
 
   server.post('/api/history/reset', async (req: Request, res: Response) => {
     const { prompt, role, cold } = req.body;
+    try {
+      const usage = await initHistory(prompt, role, cold);
 
-    await initHistory(prompt, role, cold);
-
-    res.status(200).send({ list: history, rateLimit });
+      res.status(200).send({ list: history, rateLimit, usage });
+    } catch (error) {
+      if ((error as any).status === 400) {
+        // Bad request from API
+        res.status(400).send(error);
+      } else {
+        res.status(500).send(error);
+      }
+    }
   });
 
   server.post('/api/chat', async (req: Request, res: Response) => {
@@ -136,20 +145,33 @@ function getLimits(responseHeaders: Record<string, string[]>): TLimits {
       role,
       content: prompt,
     });
+    try {
+      const { chat, headers } = await chatCompletion(
+        history.map(({ id, ...idLess }) => idLess),
+        temperature
+      );
 
-    const { chat, headers } = await chatCompletion(
-      history.map(({ id, ...idLess }) => idLess),
-      temperature
-    );
+      rateLimit = getLimits(headers);
 
-    rateLimit = getLimits(headers);
+      console.log(JSON.stringify(chat));
+      const response = { id: chat.id, ...chat.choices[0].message };
+      // add ai response
+      history.push(response);
 
-    console.log(JSON.stringify(chat));
-    const response = { id: chat.id, ...chat.choices[0].message };
-    // add ai response
-    history.push(response);
-
-    res.status(200).send({ rateLimit, message: response });
+      res.status(200).send({
+        rateLimit,
+        message: response,
+        usage: chat.usage,
+        finishReason: chat.choices[0].finish_reason,
+      });
+    } catch (error) {
+      if ((error as any).status === 400) {
+        // Bad request from API
+        res.status(400).send(error);
+      } else {
+        res.status(500).send(error);
+      }
+    }
   });
 
   // start listening
