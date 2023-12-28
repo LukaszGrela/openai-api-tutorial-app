@@ -4,14 +4,16 @@ import { ChatOutput } from './components/ChatOutput';
 import { ChatLimits } from './components/ChatLimits';
 import { Provider } from 'react-redux';
 import store from './store';
-import { useAppDispatch } from './store/slice/hooks';
+import { useAppDispatch, useAppSelector } from './store/slice/hooks';
 import { initChatAction } from './store/slice/chat';
 import { ChatError } from './components/ChatError';
 
 import './App.css';
+import { HistoryList } from './components/HistoryList';
 
 function App() {
   const dispatch = useAppDispatch();
+  const route = useAppSelector((state) => state.route);
 
   useEffect(() => {
     dispatch(initChatAction());
@@ -20,10 +22,20 @@ function App() {
   return (
     <main className='app'>
       <h1>ChatGPT for Web Developers</h1>
-      <ChatForm />
-      <ChatError />
-      <ChatLimits />
-      <ChatOutput autoScroll />
+      {route === 'chat' && (
+        <div className='route chat'>
+          <ChatForm />
+          <ChatError />
+          <ChatLimits />
+          <ChatOutput autoScroll />
+        </div>
+      )}
+      {route === 'history' && (
+        <div className='route history'>
+          <h2>Chat history</h2>
+          <HistoryList />
+        </div>
+      )}
     </main>
   );
 }
