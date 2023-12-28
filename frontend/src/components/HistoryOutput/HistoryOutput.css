@@ -1,0 +1,27 @@
+output.history-output > ul {
+  flex-grow: 10;
+  padding-bottom: 50px;
+  list-style: none;
+  padding: 0;
+}
+
+output.history-output > ul > li {
+  text-align: left;
+}
+
+output.history-output > ul > li > :first-child:before {
+  content: '🤖';
+  margin-right: 0.5rem;
+}
+
+output.history-output > ul > li.user > :first-child:before {
+  content: '🧑';
+}
+
+output.history-output > ul > li.system > :first-child:before {
+  content: '⚙️';
+}
+
+output.history-output {
+  overflow-y: auto;
+}

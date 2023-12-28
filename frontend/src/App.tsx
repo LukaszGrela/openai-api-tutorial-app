@@ -10,6 +10,7 @@ import { ChatError } from './components/ChatError';
 
 import './App.css';
 import { HistoryList } from './components/HistoryList';
+import { HistoryOutput } from './components/HistoryOutput';
 
 function App() {
   const dispatch = useAppDispatch();
@@ -34,6 +35,7 @@ function App() {
         <div className='route history'>
           <h2>Chat history</h2>
           <HistoryList />
+          <HistoryOutput />
         </div>
       )}
     </main>
