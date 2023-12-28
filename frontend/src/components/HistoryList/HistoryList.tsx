@@ -1,6 +1,11 @@
 import { FC } from 'react';
 import { useAppSelector } from '../../store/slice/hooks';
-import { SwitchToChat } from './tools';
+import {
+  DeleteHistoryItem,
+  SwitchToChat,
+  UseHistoryItem,
+  ViewHistoryItem,
+} from './tools';
 
 import './HistoryList.css';
 
@@ -42,7 +47,11 @@ const HistoryList: FC = () => {
                 Created: {date.toLocaleString(locale, dateConfig)}
               </span>
               <span className='size'>Length: {list.length}</span>
-              <span className='tools'>View Delete Use</span>
+              <span className='tools'>
+                <ViewHistoryItem date={date} />
+                <DeleteHistoryItem date={date} />
+                <UseHistoryItem date={date} />
+              </span>
             </li>
           ))}
         </ul>

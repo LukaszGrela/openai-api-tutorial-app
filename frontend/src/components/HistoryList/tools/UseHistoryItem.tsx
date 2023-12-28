@@ -1,27 +1,26 @@
 import { FC, useCallback } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../store/slice/hooks';
-import { setRoute } from '../../../store/slice/route';
-import { viewHistoryEntry } from '../../../store/slice/history';
+import { actionUseHistoryEntry } from '../../../store/slice/history';
+import { IProps } from './types';
 
-const SwitchToChat: FC = () => {
+const UseHistoryItem: FC<IProps> = ({ date }) => {
   const dispatch = useAppDispatch();
   const disable = useAppSelector((state) => state.history.loading);
 
   const handleClick = useCallback(() => {
-    dispatch(viewHistoryEntry(undefined));
-    dispatch(setRoute('chat'));
-  }, [dispatch]);
+    dispatch(actionUseHistoryEntry(date));
+  }, [date, dispatch]);
 
   return (
     <button
       type='button'
       onClick={handleClick}
       disabled={disable}
-      className='show-chat'
+      className='history-item-tools-button use'
     >
-      Show chat
+      Use
     </button>
   );
 };
 
-export default SwitchToChat;
+export default UseHistoryItem;
