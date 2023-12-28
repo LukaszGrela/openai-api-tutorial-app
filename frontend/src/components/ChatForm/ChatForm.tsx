@@ -1,6 +1,6 @@
 import { FC, FormEvent, useCallback, useState } from 'react';
 import { ChatTemperature } from '../ChatConfiguration';
-import { RestartChat } from './tools';
+import { RestartChat, SwitchToHistory } from './tools';
 import { useAppDispatch, useAppSelector } from '../../store/slice/hooks';
 import {
   sendPromptAction,
@@ -72,6 +72,7 @@ const ChatForm: FC = (): JSX.Element => {
       </div>
       <div className='tools'>
         <RestartChat />
+        <SwitchToHistory />
       </div>
     </div>
   );
