@@ -18,8 +18,9 @@ const storeHistoryMiddleware: Middleware<
   const actionResult = next(action); // do the default
 
   if (
-    reactToAction.type === 'chat/SEND_SYSTEM_PROMPT/finish' ||
-    reactToAction.type === 'chat/RESTART/finish'
+    (reactToAction.type === 'chat/SEND_SYSTEM_PROMPT/finish' ||
+      reactToAction.type === 'chat/RESTART/finish') &&
+    previousState.chat.list.length > 2
   ) {
     next(
       setHistory({
