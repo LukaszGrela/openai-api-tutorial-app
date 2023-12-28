@@ -1,15 +1,21 @@
 import { FC, FormEvent, useCallback, useState } from 'react';
 import { ChatTemperature } from '../ChatConfiguration';
-import { IProps } from './types';
 import { RestartChat } from './tools';
+import { useAppDispatch, useAppSelector } from '../../store/slice/hooks';
+import {
+  sendPromptAction,
+  sendSystemPromptAction,
+} from '../../store/slice/chat';
 
 import './ChatForm.css';
 
-const ChatForm: FC<IProps> = ({
-  onSubmit,
-  disable,
-  onSetSystem,
-}): JSX.Element => {
+const ChatForm: FC = (): JSX.Element => {
+  const dispatch = useAppDispatch();
+  const disable = useAppSelector(
+    (state) =>
+      state.history.loading || state.chat.loading || !!state.chat.error?.message
+  );
+
   const [prompt, setPrompt] = useState('');
 
   const handleChange: React.ChangeEventHandler<HTMLTextAreaElement> =
@@ -24,18 +30,17 @@ const ChatForm: FC<IProps> = ({
       event.preventDefault();
 
       setPrompt(''); // reset on submit
-      onSubmit({ prompt });
+
+      dispatch(sendPromptAction(prompt));
     },
-    [onSubmit, prompt]
+    [dispatch, prompt]
   );
 
   const handleSetSystem = useCallback(() => {
     setPrompt(''); // reset on submit
 
-    onSetSystem({
-      prompt,
-    });
-  }, [onSetSystem, prompt]);
+    dispatch(sendSystemPromptAction(prompt));
+  }, [dispatch, prompt]);
 
   return (
     <div className='chat-form'>
