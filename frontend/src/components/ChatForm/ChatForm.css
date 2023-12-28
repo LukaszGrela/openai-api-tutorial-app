@@ -39,3 +39,7 @@ button.restart-chat:disabled,
 .chat-form-input label {
   text-align: start;
 }
+
+textarea#prompt {
+  min-height: 3.75rem;
+}
