@@ -1,0 +1,47 @@
+.history-list {
+}
+
+.history-list .tools {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.history-list .list {
+  overflow-y: auto;
+  max-height: 6rem;
+
+  margin-bottom: 0.25rem;
+}
+
+.history-list .list > ul {
+  flex-grow: 10;
+  padding-bottom: 50px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.history-list .list > ul > li {
+  text-align: left;
+}
+
+.history-list .list > ul > li.history-item {
+  display: flex;
+  flex-wrap: nowrap;
+}
+
+.history-list .list > ul > li.history-item .tools {
+  flex-grow: 0;
+  flex-shrink: 0;
+}
+
+.history-list .list > ul > li.history-item .date {
+  flex-grow: 4;
+  flex-shrink: 2;
+  flex-basis: 12rem;
+}
+.history-list .list > ul > li.history-item .size {
+  flex-grow: 2;
+  flex-shrink: 4;
+  flex-basis: 6rem;
+}
