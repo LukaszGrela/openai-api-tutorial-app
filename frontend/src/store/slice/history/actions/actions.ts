@@ -1,11 +1,10 @@
-import {
+import type { THistoryItem } from '../types';
+import type {
   THistoryActionView,
   THistoryActionClear,
   THistoryActionRemove,
   THistoryActionSet,
-  THistoryItem,
-  THistoryActionUse,
-} from '../types';
+} from './types';
 
 export const setHistory = (payload: THistoryItem): THistoryActionSet => ({
   type: 'history/SET',
@@ -16,10 +15,6 @@ export const viewHistoryEntry = (
   payload: Date | undefined
 ): THistoryActionView => ({
   type: 'history/VIEW',
-  payload,
-});
-export const actionUseHistoryEntry = (payload: Date): THistoryActionUse => ({
-  type: 'history/USE',
   payload,
 });
 

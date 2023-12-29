@@ -1,11 +1,11 @@
-import {
-  IHistoryState,
+import type {
   THistoryActionView,
   THistoryActionClear,
   THistoryActionRemove,
   THistoryActionSet,
   THistoryActionUse,
-} from './types';
+} from './actions/types';
+import type { IHistoryState } from './types';
 
 const initialState: IHistoryState = {
   current: undefined,

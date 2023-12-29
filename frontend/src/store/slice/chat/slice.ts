@@ -3,6 +3,7 @@ import type {
   TChatSendSystemPrompt,
   TInitChatAction,
   TRestartAction,
+  TSetChatHistoryAction,
 } from './actions';
 import { IChatState } from './types';
 
@@ -21,6 +22,7 @@ const slice = (
     | TInitChatAction
     | TChatSendSystemPrompt
     | TRestartAction
+    | TSetChatHistoryAction
 ): IChatState => {
   switch (action.type) {
     case 'chat/SEND_PROMPT/start':
@@ -94,7 +96,11 @@ const slice = (
         list: action.payload.list,
         error: undefined,
       };
-
+    case 'chat/history/SET':
+      return {
+        ...state,
+        list: action.payload,
+      };
     default:
       return state;
   }

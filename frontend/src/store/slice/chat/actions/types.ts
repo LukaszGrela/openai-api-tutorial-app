@@ -1,4 +1,8 @@
-import type { TPromptResponse, THistoryResponse } from '../../../../api/types';
+import type {
+  TPromptResponse,
+  THistoryResponse,
+  TResponse,
+} from '../../../../api/types';
 import type { TError } from '../../../types';
 
 export type TChatSendPromptStart = {
@@ -79,3 +83,8 @@ export type TRestartAction =
   | TRestartActionStart
   | TRestartActionFinish
   | TRestartActionFail;
+
+export type TSetChatHistoryAction = {
+  type: 'chat/history/SET';
+  payload: TResponse[];
+};

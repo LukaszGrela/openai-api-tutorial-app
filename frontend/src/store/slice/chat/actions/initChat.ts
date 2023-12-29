@@ -54,11 +54,11 @@ const initChatAction =
     try {
       const data = await getHistory();
       dispatch(initChatActionFinished(data));
-      return await Promise.resolve(data);
+      return data;
     } catch (error) {
       const payload = toError(error);
       dispatch(initChatActionFailed(payload));
-      return await Promise.reject(payload);
+      return payload;
     }
   };
 
