@@ -45,8 +45,13 @@ button.history-item-tools-button {
   flex-shrink: 2;
   flex-basis: 12rem;
 }
+.history-list .list > ul > li.history-item .tokens {
+  flex-grow: 2;
+  flex-shrink: 2;
+  flex-basis: 8rem;
+}
 .history-list .list > ul > li.history-item .size {
   flex-grow: 2;
-  flex-shrink: 4;
+  flex-shrink: 2;
   flex-basis: 6rem;
 }
