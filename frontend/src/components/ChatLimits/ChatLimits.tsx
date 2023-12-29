@@ -3,7 +3,7 @@ import { useAppSelector } from '../../store/slice/hooks';
 import './ChatLimits.css';
 
 const ChatLimits: React.FC = () => {
-  const limits = useAppSelector(({ chatLimits }) => chatLimits);
+  const limits = useAppSelector(({ chatLimits }) => chatLimits.limits);
 
   return (
     <div className='chat-limits'>
