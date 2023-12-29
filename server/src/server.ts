@@ -44,6 +44,14 @@ function getLimits(responseHeaders: Record<string, string[]>): TLimits {
   };
 }
 
+function filterHistory(
+  history: TEnrichWithId<TChatCompletionMessageParam>[]
+): TChatCompletionMessageParam[] {
+  return history.map(
+    ({ role, content }) => ({ role, content } as TChatCompletionMessageParam)
+  );
+}
+
 (async (port) => {
   const server: Express = express();
   const openai = new OpenAI({
@@ -99,7 +107,7 @@ function getLimits(responseHeaders: Record<string, string[]>): TLimits {
     temperature = cold ? 0 : 0.75;
 
     const { chat, headers } = await chatCompletion(
-      history.map(({ id, ...idLess }) => idLess),
+      filterHistory(history),
       temperature
     );
 
@@ -118,6 +126,21 @@ function getLimits(responseHeaders: Record<string, string[]>): TLimits {
 
   server.get('/api/history', (_: Request, res: Response) => {
     res.status(200).send({ list: history, rateLimit });
+  });
+
+  server.post('/api/history', async (req: Request, res: Response) => {
+    const list = req.body;
+    console.log('POST/api/history', list);
+    if (!list || !Array.isArray(list) || list.length === 0) {
+      res.status(400).json('Provide valid history list');
+      return;
+    }
+
+    console.log('list', list.length, list);
+
+    history = list;
+
+    res.status(200).json('OK');
   });
 
   server.post('/api/history/reset', async (req: Request, res: Response) => {
@@ -147,7 +170,7 @@ function getLimits(responseHeaders: Record<string, string[]>): TLimits {
     });
     try {
       const { chat, headers } = await chatCompletion(
-        history.map(({ id, ...idLess }) => idLess),
+        filterHistory(history),
         temperature
       );
 
