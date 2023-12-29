@@ -26,6 +26,7 @@ main.app {
 .chat {
   display: flex;
   flex-direction: column;
+  height: 80vh;
 }
 
 .chat .chat-form {
