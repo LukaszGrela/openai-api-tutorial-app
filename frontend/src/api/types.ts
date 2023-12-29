@@ -19,9 +19,16 @@ export type TLimits = {
   tokensUsageBasedRemaining: number;
 };
 
+export type TUsage = {
+  prompt_tokens: number;
+  completion_tokens: number;
+  total_tokens: number;
+};
+
 export type THistoryResponse = {
   list: TResponse[];
   rateLimit: TLimits;
+  usage?: TUsage;
 };
 
 export type TPromptResponse = {
@@ -33,4 +40,5 @@ export type TPromptResponse = {
     | 'tool_calls'
     | 'content_filter'
     | 'function_call';
+  usage?: TUsage;
 };
