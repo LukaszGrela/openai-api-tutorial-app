@@ -1,14 +1,14 @@
 import { FC, useCallback } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../store/slice/hooks';
-import { actionUseHistoryEntry } from '../../../store/slice/history';
+import { initChatWithHistory } from '../../../store/slice/history/actions';
 import { IProps } from './types';
 
 const UseHistoryItem: FC<IProps> = ({ date }) => {
   const dispatch = useAppDispatch();
   const disable = useAppSelector((state) => state.history.loading);
 
-  const handleClick = useCallback(() => {
-    dispatch(actionUseHistoryEntry(date));
+  const handleClick = useCallback(async () => {
+    await dispatch(initChatWithHistory(date));
   }, [date, dispatch]);
 
   return (
