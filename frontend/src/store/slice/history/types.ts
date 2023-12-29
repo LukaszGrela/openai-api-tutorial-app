@@ -1,8 +1,9 @@
-import type { TResponse } from '../../../api/types';
+import type { TResponse, TUsage } from '../../../api/types';
 
 export type THistoryItem = {
   date: Date;
   list: TResponse[];
+  usage: TUsage;
 };
 
 export interface IHistoryState {

@@ -1,18 +1,30 @@
-import { TSetChatLimits } from '.';
-import { TLimits } from '../../../api/types';
+import type { IChatLimitsState, TSetChatLimits, TSetChatUsage } from './types';
 
-const initialState: TLimits = {
-  requestsLimit: 0,
-  requestsRemaining: 0,
-  tokensLimit: 0,
-  tokensRemaining: 0,
-  tokensUsageBasedLimit: 0,
-  tokensUsageBasedRemaining: 0,
+const initialState: IChatLimitsState = {
+  limits: {
+    requestsLimit: 0,
+    requestsRemaining: 0,
+    tokensLimit: 0,
+    tokensRemaining: 0,
+    tokensUsageBasedLimit: 0,
+    tokensUsageBasedRemaining: 0,
+  },
+  usage: {
+    completion_tokens: 0,
+    prompt_tokens: 0,
+    total_tokens: 0,
+  },
 };
 
-const slice = (state = initialState, action: TSetChatLimits): TLimits => {
-  if (action.type === 'chat-limits/SET') {
-    return action.payload;
+const slice = (
+  state = initialState,
+  action: TSetChatLimits | TSetChatUsage
+): IChatLimitsState => {
+  if (action.type === 'chat-limits/SET_LIMITS') {
+    return { ...state, limits: action.payload };
+  }
+  if (action.type === 'chat-limits/SET_USAGE') {
+    return { ...state, usage: action.payload };
   }
   return state;
 };

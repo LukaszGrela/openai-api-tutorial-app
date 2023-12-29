@@ -26,6 +26,7 @@ const storeHistoryMiddleware: Middleware<
       setHistory({
         date: new Date(),
         list: previousState.chat.list,
+        usage: previousState.chatLimits.usage,
       })
     );
   }

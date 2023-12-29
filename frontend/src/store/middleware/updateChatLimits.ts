@@ -6,7 +6,7 @@ import type {
   TInitChatActionFinish,
   TRestartActionFinish,
 } from '../slice/chat';
-import { setChatLimits } from '../slice/chat-limits';
+import { setChatLimits, setChatUsage } from '../slice/chat-limits';
 
 const updateChatLimits: Middleware<
   unknown,
@@ -33,6 +33,9 @@ const updateChatLimits: Middleware<
   ) {
     const { payload } = reactToAction;
     next(setChatLimits(payload.rateLimit));
+    if (payload.usage) {
+      next(setChatUsage(payload.usage));
+    }
   }
 
   return actionResult;
