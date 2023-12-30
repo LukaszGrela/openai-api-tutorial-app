@@ -1,7 +1,7 @@
 import { FC, useLayoutEffect } from 'react';
 import { Markdown } from '../Markdown';
 import { IProps } from './types';
-import { useAppSelector } from '../../store/slice/hooks';
+import { useAppSelector } from '../../store/hooks';
 
 import './ChatOutput.css';
 

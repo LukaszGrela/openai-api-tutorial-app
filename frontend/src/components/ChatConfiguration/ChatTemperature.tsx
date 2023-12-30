@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { useAppDispatch, useAppSelector } from '../../store/slice/hooks';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { setChatConfiguration } from '../../store/slice/chat-configuration';
 
 const ChatTemperature = () => {

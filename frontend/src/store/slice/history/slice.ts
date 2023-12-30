@@ -277,6 +277,149 @@ const initialState: IHistoryState = {
         total_tokens: 193,
       },
     },
+    {
+      date: new Date('2023-12-30T22:30:42.040Z'),
+      list: [
+        {
+          role: 'system',
+          content:
+            'You are a library shelving App.\n\nWhen given title you will propose the placement based on the Universal Decimal Classification (UDC). \n\nAnswer the best you can, but no lies. Answer is in JSON format as follows:\n\n```\n{\n  "udc": <UDC_string>,\n  "udcDescription": <UDC_description>,\n  "status": <Status_string>,\n  "message": <Optional_string>\n}\n```\n\nWhere <UDC_string> is the UDC code, <UDC_description> is the classification description of the UDC code, <Status_string> is "OK" when matched found, "QUERY" when more details required, "NOT FOUND" when match was not possible. The <Optional_string> will contain details request when <Status_string> is "QUERY".\n\n\nIf you need an author ask user, if you need more details to acomplish task, ask user e.g.  \n{\n  "status": "QUERY",\n  "message": "Could you please provide me with the religious tradition or denomination associated with the Bible you are referring to?"\n}\n\nIf you can\'t provide UDC respond with JSON\n{\n  "status": "NOT FOUND"\n}',
+          id: 1703864245735,
+        },
+        {
+          id: 'chatcmpl-8b9DKugMNLOCTAqa1frkHIoyriCAC',
+          role: 'assistant',
+          content:
+            '{\n  "status": "QUERY",\n  "message": "Could you please provide me with the author of the book you are referring to?"\n}',
+        },
+        {
+          id: 1703864289403,
+          role: 'user',
+          content: '"2586 kroków" by Andrzej Pilipiuk',
+        },
+        {
+          id: 'chatcmpl-8b9E1F7BuALD8d17QjV0zSZa3ONlf',
+          role: 'assistant',
+          content:
+            '{\n  "udc": "891.853.6-312.9",\n  "udcDescription": "Polish literature - Prose - 21st century - Individual authors - Pilipiuk, Andrzej",\n  "status": "OK"\n}',
+        },
+        {
+          id: 1703864361693,
+          role: 'user',
+          content: 'Project Management for Dummies by Stanley E. Portny',
+        },
+        {
+          id: 'chatcmpl-8b9FBD1z0wlC4xrFYlGIRdN2uTaXN',
+          role: 'assistant',
+          content:
+            '{\n  "udc": "658.404",\n  "udcDescription": "Management - Project management",\n  "status": "OK"\n}',
+        },
+        {
+          id: 1703864386958,
+          role: 'user',
+          content: 'JavaScript Cookbook by Powers',
+        },
+        {
+          id: 'chatcmpl-8b9FbLWmTEo2YSeFzQc4O3p5ZeIwE',
+          role: 'assistant',
+          content:
+            '{\n  "status": "QUERY",\n  "message": "Could you please provide me with the full name of the author of the book you are referring to?"\n}',
+        },
+        {
+          id: 1703864418546,
+          role: 'user',
+          content: 'JavaScript Cookbook by Shelley Powers',
+        },
+        {
+          id: 'chatcmpl-8b9G625DfMq5wiwOJ9EfCUfwtOLA0',
+          role: 'assistant',
+          content:
+            '{\n  "udc": "005.2762",\n  "udcDescription": "Computer science - Programming languages - JavaScript",\n  "status": "OK"\n}',
+        },
+        {
+          id: 1703864479976,
+          role: 'user',
+          content: '"Cserwona gorączka" by Andrzej Pilipiuk',
+        },
+        {
+          id: 'chatcmpl-8b9H6plP5not4exQrVRFFtxVmzg0P',
+          role: 'assistant',
+          content:
+            '{\n  "udc": "891.853.6-312.9",\n  "udcDescription": "Polish literature - Prose - 21st century - Individual authors - Pilipiuk, Andrzej",\n  "status": "OK"\n}',
+        },
+        {
+          id: 1703864589286,
+          role: 'user',
+          content: 'Szninkiel by Grzegorz Rosiński, Jean Van Hamme',
+        },
+        {
+          id: 'chatcmpl-8b9Ir2kMFbv92JwfdyjryoFMHy7Ij',
+          role: 'assistant',
+          content:
+            '{\n  "udc": "741.5944",\n  "udcDescription": "Graphic arts - Comics, graphic novels - European comics - Polish comics",\n  "status": "OK"\n}',
+        },
+        {
+          id: 1703877694816,
+          role: 'user',
+          content: 'Pan Tadeusz - Adam Mickiewicz',
+        },
+        {
+          id: 'chatcmpl-8bCiFVWCYEaOzLWJkaUbkP5Kfh12i',
+          role: 'assistant',
+          content:
+            '{\n  "udc": "891.811.2",\n  "udcDescription": "Polish literature - Poetry - 19th century - Individual authors - Mickiewicz, Adam",\n  "status": "OK"\n}',
+        },
+        {
+          id: 1703877742506,
+          role: 'user',
+          content: '"Kajko i Kokosz - Wojowie Mirmiła"',
+        },
+        {
+          id: 'chatcmpl-8bCj0Lkznn7gvtU65e3wlNGkDF02W',
+          role: 'assistant',
+          content:
+            '{\n  "udc": "741.5944",\n  "udcDescription": "Graphic arts - Comics, graphic novels - European comics - Polish comics",\n  "status": "OK"\n}',
+        },
+        {
+          id: 1703877784023,
+          role: 'user',
+          content: 'Ogniem i Mieczem Henryk Sienkiewicz',
+        },
+        {
+          id: 'chatcmpl-8bCjgykArOmWTPZ91LNoeECtzcmsu',
+          role: 'assistant',
+          content:
+            '{\n  "udc": "891.813.2",\n  "udcDescription": "Polish literature - Prose - 19th century - Individual authors - Sienkiewicz, Henryk",\n  "status": "OK"\n}',
+        },
+        {
+          id: 1703878204327,
+          role: 'user',
+          content: '1984 - George Orwell',
+        },
+        {
+          id: 'chatcmpl-8bCqSoFi3rFXFvmC64GdEQxJeLW8G',
+          role: 'assistant',
+          content:
+            '{\n  "udc": "823.912",\n  "udcDescription": "English literature - Fiction - 20th century - Individual authors - Orwell, George",\n  "status": "OK"\n}',
+        },
+        {
+          id: 1703878359884,
+          role: 'user',
+          content: 'javascript patterns stoyan stefanov',
+        },
+        {
+          id: 'chatcmpl-8bCsydBUx9emBzfs5aGaEVzsu9EMR',
+          role: 'assistant',
+          content:
+            '{\n  "udc": "005.2762",\n  "udcDescription": "Computer science - Programming languages - JavaScript",\n  "status": "OK"\n}',
+        },
+      ],
+      usage: {
+        completion_tokens: 0,
+        prompt_tokens: 0,
+        total_tokens: 0,
+      },
+    },
   ],
   loading: false,
 };

@@ -1,4 +1,4 @@
-import { useAppSelector } from '../../store/slice/hooks';
+import { useAppSelector } from '../../store/hooks';
 
 import './ChatLimits.css';
 

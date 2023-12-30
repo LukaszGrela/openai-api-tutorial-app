@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { Markdown } from '../Markdown';
-import { useAppSelector } from '../../store/slice/hooks';
+import { useAppSelector } from '../../store/hooks';
 
 import './HistoryOutput.css';
 

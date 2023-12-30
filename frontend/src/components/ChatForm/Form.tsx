@@ -1,5 +1,5 @@
 import { FC, FormEvent, useCallback, useState } from 'react';
-import { useAppDispatch, useAppSelector } from '../../store/slice/hooks';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import {
   sendPromptAction,
   sendSystemPromptAction,

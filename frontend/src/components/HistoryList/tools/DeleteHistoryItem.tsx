@@ -1,5 +1,5 @@
 import { FC, useCallback } from 'react';
-import { useAppDispatch, useAppSelector } from '../../../store/slice/hooks';
+import { useAppDispatch, useAppSelector } from '../../../store/hooks';
 import { removeHistoryEntry } from '../../../store/slice/history';
 import { IProps } from './types';
 

@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { useAppSelector } from '../../store/slice/hooks';
+import { useAppSelector } from '../../store/hooks';
 import {
   DeleteHistoryItem,
   SwitchToChat,

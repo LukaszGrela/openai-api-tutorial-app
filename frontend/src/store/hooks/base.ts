@@ -1,5 +1,5 @@
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
-import type { TStore } from '../../types';
+import type { TStore } from '../types';
 
 type TAppDispatch = TStore['dispatch'];
 export const useAppDispatch: () => TAppDispatch = useDispatch;

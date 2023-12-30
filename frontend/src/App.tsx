@@ -4,13 +4,13 @@ import { ChatOutput } from './components/ChatOutput';
 import { ChatLimits } from './components/ChatLimits';
 import { Provider } from 'react-redux';
 import store from './store';
-import { useAppDispatch, useAppSelector } from './store/slice/hooks';
+import { useAppDispatch, useAppSelector } from './store/hooks';
 import { initChatAction } from './store/slice/chat';
 import { ChatError } from './components/ChatError';
-
-import './App.css';
 import { HistoryList } from './components/HistoryList';
 import { HistoryOutput } from './components/HistoryOutput';
+
+import './App.css';
 
 function App() {
   const dispatch = useAppDispatch();
