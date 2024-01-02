@@ -6,7 +6,6 @@ export const setHistory = async (list: TResponse[]) => {
     'history',
     base.lastIndexOf('/') !== base.length ? `${base}/` : base
   );
-  console.log('API.setHistory', JSON.stringify(list));
   const response = await fetch(endpoint.toString(), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

@@ -46,7 +46,7 @@ const sendPromptAction =
       return await Promise.resolve(data);
     } catch (error) {
       const payload = toError(error);
-      console.log(error);
+      console.error(error);
       dispatch(sendPromptActionFailed(payload));
       return await Promise.reject(payload);
     }

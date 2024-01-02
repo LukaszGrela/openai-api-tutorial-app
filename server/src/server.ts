@@ -130,13 +130,10 @@ function filterHistory(
 
   server.post('/api/history', async (req: Request, res: Response) => {
     const list = req.body;
-    console.log('POST/api/history', list);
     if (!list || !Array.isArray(list) || list.length === 0) {
       res.status(400).json('Provide valid history list');
       return;
     }
-
-    console.log('list', list.length, list);
 
     history = list;
 
@@ -176,7 +173,6 @@ function filterHistory(
 
       rateLimit = getLimits(headers);
 
-      console.log(JSON.stringify(chat));
       const response = { id: chat.id, ...chat.choices[0].message };
       // add ai response
       history.push(response);
@@ -199,6 +195,6 @@ function filterHistory(
 
   // start listening
   server.listen(port, () => {
-    console.log(`[-=SERVER=-]: Server is running at http://localhost:${port}`);
+    console.info(`[-=SERVER=-]: Server is running at http://localhost:${port}`);
   });
 })(process.env.PORT);
