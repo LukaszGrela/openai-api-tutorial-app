@@ -97,14 +97,14 @@ function filterHistory(
   const initHistory = async (
     content?: string,
     role: 'system' | 'assistant' = 'system',
-    cold = true
+    temp = 0
   ) => {
     // rest history
     history = content
       ? [{ role, content, id: new Date().getTime() }]
       : [defaultSystemRole];
 
-    temperature = cold ? 0 : 0.75;
+    temperature = isNaN(temp) ? 0 : temp;
 
     const { chat, headers } = await chatCompletion(
       filterHistory(history),
@@ -144,9 +144,9 @@ function filterHistory(
   });
 
   server.post('/api/history/reset', async (req: Request, res: Response) => {
-    const { prompt, role, cold } = req.body;
+    const { prompt, role, temp } = req.body;
     try {
-      const usage = await initHistory(prompt, role, cold);
+      const usage = await initHistory(prompt, role, temp);
 
       res.status(200).send({ list: history, rateLimit, usage });
     } catch (error) {
