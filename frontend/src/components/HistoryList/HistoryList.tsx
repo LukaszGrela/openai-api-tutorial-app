@@ -41,13 +41,19 @@ const HistoryList: FC = () => {
     <div className='history-list'>
       <div className='list'>
         <ul>
+          <li className='history-item header' key={0}>
+            <span className='date'>Created</span>
+            <span className='tokens'>Used tokens</span>
+            <span className='size'>Length</span>
+            <span className='tools'>Actions</span>
+          </li>
           {list.map(({ date, list, usage }) => (
             <li className='history-item' key={date.getTime()}>
               <span className='date'>
-                Created: {date.toLocaleString(locale, dateConfig)}
+                {date.toLocaleString(locale, dateConfig)}
               </span>
-              <span className='tokens'>Used tokens: {usage.total_tokens}</span>
-              <span className='size'>Length: {list.length}</span>
+              <span className='tokens'>{usage.total_tokens}</span>
+              <span className='size'>{list.length}</span>
               <span className='tools'>
                 <ViewHistoryItem date={date} />
                 <DeleteHistoryItem date={date} />
