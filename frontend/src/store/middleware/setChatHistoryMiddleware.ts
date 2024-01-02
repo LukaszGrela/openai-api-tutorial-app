@@ -34,6 +34,7 @@ const setChatHistoryMiddleware: Middleware<
         setHistory({
           date: new Date(),
           list: previousState.chat.list,
+          usage: previousState.chatLimits.usage,
         })
       );
     }

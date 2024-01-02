@@ -6,6 +6,7 @@ import {
   setChatHistoryMiddleware,
   storeHistoryMiddleware,
   updateChatLimits,
+  historyLocalStorageMiddleware,
 } from './middleware';
 
 const store = createStore(
@@ -16,7 +17,8 @@ const store = createStore(
       thunk,
       storeHistoryMiddleware,
       updateChatLimits,
-      setChatHistoryMiddleware
+      setChatHistoryMiddleware,
+      historyLocalStorageMiddleware
     )
   )
 );
