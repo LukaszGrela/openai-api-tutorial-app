@@ -13,5 +13,5 @@ export type TSetChatConfigurationAction = {
 };
 
 export interface IChatConfigurationState {
-  cold: boolean;
+  temperature: number;
 }

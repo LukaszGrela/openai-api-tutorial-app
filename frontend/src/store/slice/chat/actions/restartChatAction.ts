@@ -32,13 +32,13 @@ type TPromise = Promise<THistoryResponse | TError>;
 
 const restartChatAction =
   (): ThunkAction<TPromise, TAppState, unknown, TRestartAction> =>
-  async (dispatch): TPromise => {
-    const isSilly = false;
+  async (dispatch, getState): TPromise => {
+    const { chatConfiguration } = getState();
 
     dispatch(restartChatActionStarted());
 
     try {
-      const data = await clearHistory(!isSilly);
+      const data = await clearHistory(chatConfiguration.temperature);
       dispatch(restartChatActionFinished(data));
       return await Promise.resolve(data);
     } catch (error) {

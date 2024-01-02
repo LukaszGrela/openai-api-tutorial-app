@@ -1,7 +1,7 @@
 import { IChatConfigurationState, TSetChatConfigurationAction } from './types';
 
 const initialState: IChatConfigurationState = {
-  cold: true,
+  temperature: 0,
 };
 
 const chatConfigurationSlice = (
