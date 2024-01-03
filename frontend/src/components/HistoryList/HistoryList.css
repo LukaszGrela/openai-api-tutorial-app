@@ -1,0 +1,49 @@
+/*
+.history-list {
+}
+*/
+
+.history-list .tools {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.history-list .list {
+  overflow-y: auto;
+  max-height: 6rem;
+
+  margin-bottom: 0.25rem;
+}
+
+.history-list .list > ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.history-list .list > ul > li {
+  text-align: left;
+}
+
+.history-list .list > ul > li.history-item {
+  display: grid;
+  grid-template-columns: minmax(12rem, 1fr) 8rem 6rem 1fr;
+}
+
+.history-list .list > ul > li.history-item .header {
+  font-weight: 600;
+}
+
+button.history-item-tools-button {
+  font-size: 0.75rem;
+  padding: 0.3rem 0.6rem;
+}
+
+/*
+.history-list .list > ul > li.history-item .date {
+}
+.history-list .list > ul > li.history-item .tokens {
+}
+.history-list .list > ul > li.history-item .size {
+}
+*/

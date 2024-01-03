@@ -12,12 +12,28 @@ main.app {
   gap: 0.5rem;
 }
 
-.app h1,
-.chat-form {
+.app h1 {
   flex-grow: 0;
   flex-shrink: 0;
 }
 
-.chat-output {
+.route {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 3;
+}
+
+.chat {
+  display: flex;
+  flex-direction: column;
+  height: 80vh;
+}
+
+.chat .chat-form {
+  flex-grow: 0;
+  flex-shrink: 0;
+}
+
+.chat .chat-output {
   flex-grow: 3;
 }

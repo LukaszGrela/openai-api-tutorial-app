@@ -1,6 +1,6 @@
 import { THistoryResponse } from './types';
 
-export const clearHistory = async (cold = true) => {
+export const clearHistory = async (temperature?: number) => {
   const base = `${import.meta.env.VITE_API_URL}`;
   const endpoint = new URL(
     'history/reset',
@@ -11,8 +11,13 @@ export const clearHistory = async (cold = true) => {
     method: 'POST',
 
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ cold }),
+    body: JSON.stringify({ temperature }),
   });
+
+  if (!response.ok) {
+    const error = (await response.json()).error;
+    return Promise.reject(error);
+  }
 
   return response.json() as Promise<THistoryResponse>;
 };
@@ -20,7 +25,7 @@ export const clearHistory = async (cold = true) => {
 export const clearHistoryAndSetSystem = async (
   prompt: string,
   role: 'system' | 'assistant' = 'assistant',
-  cold = true
+  temperature?: number
 ) => {
   const base = `${import.meta.env.VITE_API_URL}`;
   const endpoint = new URL(
@@ -31,8 +36,13 @@ export const clearHistoryAndSetSystem = async (
   const response = await fetch(endpoint.toString(), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ prompt, role, cold }),
+    body: JSON.stringify({ prompt, role, temperature }),
   });
+
+  if (!response.ok) {
+    const error = (await response.json()).error;
+    return Promise.reject(error);
+  }
 
   return response.json() as Promise<THistoryResponse>;
 };

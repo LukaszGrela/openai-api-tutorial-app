@@ -1,22 +1,22 @@
 import { FC, useLayoutEffect } from 'react';
 import { Markdown } from '../Markdown';
 import { IProps } from './types';
+import { useAppSelector } from '../../store/hooks';
 
 import './ChatOutput.css';
 
-const ChatOutput: FC<IProps> = ({ responses, autoScroll }) => {
+const ChatOutput: FC<IProps> = ({ autoScroll }) => {
+  const responses = useAppSelector(({ chat }) => chat.list);
+
   const className = 'chat-output';
   useLayoutEffect(() => {
     if (autoScroll && responses.length) {
-      console.log('AutoScroll', autoScroll);
-      console.log('responses', responses.length);
       const output = document.querySelector<HTMLElement>(
         className
           .split(' ')
           .map((s) => `.${s}`)
           .join('')
       );
-      console.log('output', output);
       output?.scrollTo({
         left: 0,
 
@@ -28,9 +28,15 @@ const ChatOutput: FC<IProps> = ({ responses, autoScroll }) => {
   return (
     <output className={className}>
       <ul>
-        {responses.map(({ role, content, id }) => (
+        {responses.map(({ role, content, id, finishReason }) => (
           <li className={role} key={id}>
             <Markdown markdown={content} />
+            {finishReason === 'content_filter' && (
+              <Markdown markdown='**Warning** answer was filtered by Open API' />
+            )}
+            {finishReason === 'length' && (
+              <Markdown markdown='**Warning** maximum number of tokens specified in the request was reached, please **Restart** the chat.' />
+            )}
           </li>
         ))}
       </ul>

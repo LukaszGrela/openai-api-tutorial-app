@@ -44,6 +44,14 @@ function getLimits(responseHeaders: Record<string, string[]>): TLimits {
   };
 }
 
+function filterHistory(
+  history: TEnrichWithId<TChatCompletionMessageParam>[]
+): TChatCompletionMessageParam[] {
+  return history.map(
+    ({ role, content }) => ({ role, content } as TChatCompletionMessageParam)
+  );
+}
+
 (async (port) => {
   const server: Express = express();
   const openai = new OpenAI({
@@ -78,7 +86,7 @@ function getLimits(responseHeaders: Record<string, string[]>): TLimits {
       })
       .asResponse();
 
-    const chat = await response.json();
+    const chat = (await response.json()) as OpenAI.ChatCompletion;
 
     return {
       headers: response.headers.raw(),
@@ -89,24 +97,25 @@ function getLimits(responseHeaders: Record<string, string[]>): TLimits {
   const initHistory = async (
     content?: string,
     role: 'system' | 'assistant' = 'system',
-    cold = true
+    temp = 0
   ) => {
-    console.log('initHistory', role, cold, content);
     // rest history
     history = content
       ? [{ role, content, id: new Date().getTime() }]
       : [defaultSystemRole];
 
-    temperature = cold ? 0 : 0.75;
+    temperature = isNaN(temp) ? 0 : temp;
 
     const { chat, headers } = await chatCompletion(
-      history.map(({ id, ...idLess }) => idLess),
+      filterHistory(history),
       temperature
     );
 
     rateLimit = getLimits(headers);
 
     history.push({ id: chat.id, ...chat.choices[0].message });
+
+    return chat.usage;
   };
 
   server.use(express.json());
@@ -119,12 +128,32 @@ function getLimits(responseHeaders: Record<string, string[]>): TLimits {
     res.status(200).send({ list: history, rateLimit });
   });
 
+  server.post('/api/history', async (req: Request, res: Response) => {
+    const list = req.body;
+    if (!list || !Array.isArray(list) || list.length === 0) {
+      res.status(400).json('Provide valid history list');
+      return;
+    }
+
+    history = list;
+
+    res.status(200).json('OK');
+  });
+
   server.post('/api/history/reset', async (req: Request, res: Response) => {
-    const { prompt, role, cold } = req.body;
+    const { prompt, role, temp } = req.body;
+    try {
+      const usage = await initHistory(prompt, role, temp);
 
-    await initHistory(prompt, role, cold);
-
-    res.status(200).send({ list: history, rateLimit });
+      res.status(200).send({ list: history, rateLimit, usage });
+    } catch (error) {
+      if ((error as any).status === 400) {
+        // Bad request from API
+        res.status(400).send(error);
+      } else {
+        res.status(500).send(error);
+      }
+    }
   });
 
   server.post('/api/chat', async (req: Request, res: Response) => {
@@ -136,24 +165,36 @@ function getLimits(responseHeaders: Record<string, string[]>): TLimits {
       role,
       content: prompt,
     });
+    try {
+      const { chat, headers } = await chatCompletion(
+        filterHistory(history),
+        temperature
+      );
 
-    const { chat, headers } = await chatCompletion(
-      history.map(({ id, ...idLess }) => idLess),
-      temperature
-    );
+      rateLimit = getLimits(headers);
 
-    rateLimit = getLimits(headers);
+      const response = { id: chat.id, ...chat.choices[0].message };
+      // add ai response
+      history.push(response);
 
-    console.log(JSON.stringify(chat));
-    const response = { id: chat.id, ...chat.choices[0].message };
-    // add ai response
-    history.push(response);
-
-    res.status(200).send({ rateLimit, message: response });
+      res.status(200).send({
+        rateLimit,
+        message: response,
+        usage: chat.usage,
+        finishReason: chat.choices[0].finish_reason,
+      });
+    } catch (error) {
+      if ((error as any).status === 400) {
+        // Bad request from API
+        res.status(400).send(error);
+      } else {
+        res.status(500).send(error);
+      }
+    }
   });
 
   // start listening
   server.listen(port, () => {
-    console.log(`[-=SERVER=-]: Server is running at http://localhost:${port}`);
+    console.info(`[-=SERVER=-]: Server is running at http://localhost:${port}`);
   });
 })(process.env.PORT);

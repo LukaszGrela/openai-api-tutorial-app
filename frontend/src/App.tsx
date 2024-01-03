@@ -1,113 +1,53 @@
-import { useCallback, useEffect, useState } from 'react';
-import { sendPrompt } from './api/sendPrompt';
+import { useEffect } from 'react';
 import { ChatForm } from './components/ChatForm';
-import { TChatFormData } from './components/ChatForm/types';
 import { ChatOutput } from './components/ChatOutput';
-import { clearHistory, clearHistoryAndSetSystem } from './api/clearHistory';
-import { TResponse } from './components/ChatOutput/types';
-import './App.css';
-import { getHistory } from './api/getHistory';
-import { TLimits } from './api/types';
 import { ChatLimits } from './components/ChatLimits';
+import { Provider } from 'react-redux';
+import store from './store';
+import { useAppDispatch, useAppSelector } from './store/hooks';
+import { initChatAction } from './store/slice/chat';
+import { ChatError } from './components/ChatError';
+import { HistoryList } from './components/HistoryList';
+import { HistoryOutput } from './components/HistoryOutput';
 
-let id = 0;
+import './App.css';
 
 function App() {
-  const [loading, setLoading] = useState(false);
-  const [responses, addResponse] = useState<TResponse[]>([]);
-  const [limits, setLimits] = useState<TLimits>({
-    requestsLimit: 0,
-    requestsRemaining: 0,
-    tokensLimit: 0,
-    tokensRemaining: 0,
-    tokensUsageBasedLimit: 0,
-    tokensUsageBasedRemaining: 0,
-  });
+  const dispatch = useAppDispatch();
+  const route = useAppSelector((state) => state.route);
 
   useEffect(() => {
-    const fetchInitHistory = async () => {
-      setLoading(true);
-      try {
-        const { list, rateLimit } = await getHistory();
-        setLimits(rateLimit);
-        addResponse(list);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchInitHistory();
-  }, []);
-
-  const handleSubmit = useCallback(async ({ prompt }: TChatFormData) => {
-    console.log('Chat', prompt);
-    addResponse((responses) => [
-      ...responses,
-      { id: ++id, role: 'user', content: prompt },
-    ]);
-    setLoading(true);
-    try {
-      const { message, rateLimit } = await sendPrompt(prompt);
-      console.log(message);
-      setLimits(rateLimit);
-      addResponse((responses) => [...responses, message]);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  const handleRestart = useCallback(async () => {
-    setLoading(true);
-    try {
-      const { list, rateLimit } = await clearHistory();
-      console.log(list);
-      setLimits(rateLimit);
-      addResponse(list);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  const handleSetSystem = useCallback(
-    async ({ prompt, isSilly }: TChatFormData) => {
-      setLoading(true);
-      try {
-        const { list, rateLimit } = await clearHistoryAndSetSystem(
-          prompt,
-          'system',
-          !isSilly
-        );
-        console.log(list);
-        setLimits(rateLimit);
-        addResponse(list);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    },
-    []
-  );
+    dispatch(initChatAction());
+  }, [dispatch]);
 
   return (
     <main className='app'>
       <h1>ChatGPT for Web Developers</h1>
-      <ChatForm
-        disable={loading}
-        onSubmit={handleSubmit}
-        onReset={handleRestart}
-        onSetSystem={handleSetSystem}
-      />
-      <ChatLimits limits={limits} />
-      <ChatOutput autoScroll responses={responses} />
+      {route === 'chat' && (
+        <div className='route chat'>
+          <ChatForm />
+          <ChatError />
+          <ChatLimits />
+          <ChatOutput autoScroll />
+        </div>
+      )}
+      {route === 'history' && (
+        <div className='route history'>
+          <h2>Chat history</h2>
+          <HistoryList />
+          <HistoryOutput />
+        </div>
+      )}
     </main>
   );
 }
 
-export default App;
+const AppWrapper = () => {
+  return (
+    <Provider store={store}>
+      <App />
+    </Provider>
+  );
+};
+
+export default AppWrapper;

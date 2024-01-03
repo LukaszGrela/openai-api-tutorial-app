@@ -13,5 +13,9 @@ export const sendPrompt = async (prompt: string) => {
     body: JSON.stringify({ prompt, role: 'user' }),
   });
 
+  if (!response.ok) {
+    const error = (await response.json()).error;
+    return Promise.reject(error);
+  }
   return response.json() as Promise<TPromptResponse>;
 };
