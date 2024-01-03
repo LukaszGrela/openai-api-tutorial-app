@@ -18,12 +18,21 @@ const setChatHistoryMiddleware: Middleware<
   const actionResult = next(action); // do the default
   const reactToAction = action as THistoryActionUseFinish;
   if (reactToAction.type === 'history/USE/finished') {
-    const { date, list } = reactToAction.payload;
+    const {
+      data: { date, list },
+      useSystem,
+    } = reactToAction.payload;
 
-    // remove from history
-    next(removeHistoryEntry(date));
-    // set chat history
-    next(setChatHistory(list));
+    if (!useSystem) {
+      // remove from history if it is not system
+      next(removeHistoryEntry(date));
+      // set chat history
+      next(setChatHistory(list));
+    } else {
+      // use only system message
+      next(setChatHistory(list.filter(({ role }) => role === 'system')));
+    }
+
     // clear selection
     next(viewHistoryEntry(undefined));
     // navigate to chat

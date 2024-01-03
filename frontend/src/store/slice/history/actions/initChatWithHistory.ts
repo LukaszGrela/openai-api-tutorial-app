@@ -13,10 +13,11 @@ import { setHistory } from '../../../../api/setHistory';
 type TPromise = Promise<THistoryItem | TError>;
 
 export const initChatWithHistoryStarted = (
-  payload: Date
+  date: Date,
+  useSystem = false
 ): THistoryActionUseStart => ({
   type: 'history/USE/started',
-  payload,
+  payload: { date, useSystem },
 });
 export const initChatWithHistoryFailed = (
   payload: TError
@@ -25,18 +26,22 @@ export const initChatWithHistoryFailed = (
   payload,
 });
 export const initChatWithHistoryFinished = (
-  payload: THistoryItem
+  data: THistoryItem,
+  useSystem = false
 ): THistoryActionUseFinish => ({
   type: 'history/USE/finished',
-  payload,
+  payload: { data, useSystem },
 });
 
 const initChatWithHistory =
-  (date: Date): ThunkAction<TPromise, TAppState, unknown, THistoryActionUse> =>
+  (
+    date: Date,
+    useSystem = false
+  ): ThunkAction<TPromise, TAppState, unknown, THistoryActionUse> =>
   async (dispatch, getState): TPromise => {
     const { history } = getState();
 
-    dispatch(initChatWithHistoryStarted(date));
+    dispatch(initChatWithHistoryStarted(date, useSystem));
 
     try {
       let data = history.list.find(
@@ -55,7 +60,7 @@ const initChatWithHistory =
         // send
         await setHistory(data.list);
         // all good
-        dispatch(initChatWithHistoryFinished(data));
+        dispatch(initChatWithHistoryFinished(data, useSystem));
         return data;
       }
 

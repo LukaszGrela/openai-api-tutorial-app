@@ -1,6 +1,6 @@
 export type TResponse = {
   id: string | number;
-  role: string;
+  role: 'user' | 'assistant' | 'system';
   content: string;
   finishReason?:
     | 'stop'

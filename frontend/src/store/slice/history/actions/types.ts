@@ -14,11 +14,11 @@ export type THistoryActionView = {
  */
 export type THistoryActionUseStart = {
   type: 'history/USE/started';
-  payload: Date;
+  payload: { date: Date; useSystem?: boolean };
 };
 export type THistoryActionUseFinish = {
   type: 'history/USE/finished';
-  payload: THistoryItem;
+  payload: { data: THistoryItem; useSystem?: boolean };
 };
 export type THistoryActionUseFail = {
   type: 'history/USE/failed';

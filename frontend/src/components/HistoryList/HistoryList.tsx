@@ -58,6 +58,7 @@ const HistoryList: FC = () => {
                 <ViewHistoryItem date={date} />
                 <DeleteHistoryItem date={date} />
                 <UseHistoryItem date={date} />
+                <UseHistoryItem date={date} useSystem />
               </span>
             </li>
           ))}
