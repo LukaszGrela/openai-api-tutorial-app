@@ -7,11 +7,6 @@ export type TSetChatConfigurationActionPayload = {
   };
 }[TStateKeys];
 
-export type TSetChatConfigurationAction = {
-  type: 'chat-configuration/SET';
-  payload: TSetChatConfigurationActionPayload;
-};
-
 export interface IChatConfigurationState {
   temperature: number;
 }

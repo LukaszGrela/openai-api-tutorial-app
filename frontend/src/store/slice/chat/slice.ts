@@ -1,11 +1,12 @@
-import type {
-  TChatSendPrompt,
-  TChatSendSystemPrompt,
-  TInitChatAction,
-  TRestartAction,
-  TSetChatHistoryAction,
+import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+import {
+  initChatAction,
+  restartChatAction,
+  sendPromptAction,
+  sendSystemPromptAction,
 } from './actions';
-import { IChatState } from './types';
+import type { IChatState } from './types';
+import type { TResponse } from '../../../api/types';
 
 const initialState: IChatState = {
   list: [],
@@ -15,95 +16,78 @@ const initialState: IChatState = {
 
 let id = 0;
 
-const slice = (
-  state = initialState,
-  action:
-    | TChatSendPrompt
-    | TInitChatAction
-    | TChatSendSystemPrompt
-    | TRestartAction
-    | TSetChatHistoryAction
-): IChatState => {
-  switch (action.type) {
-    case 'chat/SEND_PROMPT/start':
-      return {
-        ...state,
-        list: [
-          ...state.list,
-          // user prompt
-          { id: ++id, role: 'user', content: action.payload },
-        ],
-        loading: true,
-      };
-    case 'chat/SEND_PROMPT/fail':
-      return {
-        ...state,
-        loading: false,
-        error: action.payload,
-      };
-    case 'chat/SEND_PROMPT/finish':
-      return {
-        ...state,
-        error: undefined,
-        loading: false,
+export const SLICE_NAME = 'chat' as const;
+export const chat = createSlice({
+  name: SLICE_NAME,
+  initialState,
+  reducers: {
+    setChatHistory(state, action: PayloadAction<TResponse[]>) {
+      state.list = action.payload;
+    },
+  },
+  extraReducers(builder) {
+    builder.addCase(initChatAction.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(initChatAction.fulfilled, (state, action) => {
+      state.initiated = true;
+      state.error = undefined;
+      state.list = action.payload.list;
+      state.loading = false;
+    });
+    builder.addCase(initChatAction.rejected, (state, action) => {
+      state.error = action.payload;
+      state.loading = false;
+    });
+
+    builder.addCase(sendPromptAction.pending, (state, action) => {
+      console.log('action', action);
+      state.loading = true;
+      state.list.push(
+        // user prompt
+        { id: ++id, role: 'user', content: action.meta.arg }
+      );
+    });
+    builder.addCase(sendPromptAction.fulfilled, (state, action) => {
+      state.error = undefined;
+      state.list.push(
         // chat gpt response
-        list: [
-          ...state.list,
-          {
-            ...action.payload.message,
-            finishReason: action.payload.finishReason,
-          },
-        ],
-      };
+        {
+          ...action.payload.message,
+          finishReason: action.payload.finishReason,
+        }
+      );
+      state.loading = false;
+    });
+    builder.addCase(sendPromptAction.rejected, (state, action) => {
+      state.error = action.payload;
+      state.loading = false;
+    });
 
-    case 'chat/INIT/start':
-      return {
-        ...state,
-        loading: true,
-      };
-    case 'chat/INIT/finish':
-      return {
-        initiated: true,
-        list: action.payload.list,
-        loading: false,
-        error: undefined,
-      };
-    case 'chat/INIT/fail':
-      return {
-        ...state,
-        loading: false,
-        error: action.payload,
-      };
+    builder.addCase(restartChatAction.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(restartChatAction.fulfilled, (state, action) => {
+      state.error = undefined;
+      state.list = action.payload.list;
+      state.loading = false;
+    });
+    builder.addCase(restartChatAction.rejected, (state, action) => {
+      state.error = action.payload;
+      state.loading = false;
+    });
 
-    case 'chat/SEND_SYSTEM_PROMPT/start':
-    case 'chat/RESTART/start':
-      return {
-        ...state,
-        loading: true,
-      };
-    case 'chat/SEND_SYSTEM_PROMPT/fail':
-    case 'chat/RESTART/fail':
-      return {
-        ...state,
-        loading: false,
-        error: action.payload,
-      };
-    case 'chat/SEND_SYSTEM_PROMPT/finish':
-    case 'chat/RESTART/finish':
-      return {
-        ...state,
-        loading: false,
-        list: action.payload.list,
-        error: undefined,
-      };
-    case 'chat/history/SET':
-      return {
-        ...state,
-        list: action.payload,
-      };
-    default:
-      return state;
-  }
-};
-
-export default slice;
+    builder.addCase(sendSystemPromptAction.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(sendSystemPromptAction.fulfilled, (state, action) => {
+      state.error = undefined;
+      state.list = action.payload.list;
+      state.loading = false;
+    });
+    builder.addCase(sendSystemPromptAction.rejected, (state, action) => {
+      state.error = action.payload;
+      state.loading = false;
+    });
+  },
+});

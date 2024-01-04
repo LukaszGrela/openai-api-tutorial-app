@@ -1,31 +1,33 @@
-import { Dispatch, Middleware } from 'redux';
-import { TAppState } from '../types';
-import {
-  THistoryActionRemove,
-  THistoryActionSet,
-} from '../slice/history/actions';
 import { localHistoryStorage } from '../../utils/localHistoryStorage';
+import { createListenerMiddleware, isAnyOf } from '@reduxjs/toolkit';
+import { TAppStartListening, TListenerEffect } from './types';
+import { clearHistory, removeHistoryEntry, setHistory } from '../slice/history';
 
-const historyLocalStorageMiddleware: Middleware<
-  unknown,
-  TAppState,
-  Dispatch<THistoryActionSet | THistoryActionRemove>
-> = (storeApi) => (next) => (action) => {
-  const actionResult = next(action); // do the default
-  const reactToAction = action as THistoryActionSet | THistoryActionRemove;
-  if (
-    reactToAction.type === 'history/SET' ||
-    reactToAction.type === 'history/REMOVE'
-  ) {
-    const state = storeApi.getState();
+type THistorySet = ReturnType<typeof setHistory>;
+type THistoryRemove = ReturnType<typeof removeHistoryEntry>;
+type THistoryClear = ReturnType<typeof clearHistory>;
 
-    try {
-      localHistoryStorage.setObject('historyList', state.history.list);
-    } catch (error) {
-      console.error(error);
-    }
+const historyLocalStorageEffect: TListenerEffect<
+  THistoryRemove | THistoryClear | THistorySet
+> = (_, listenerApi) => {
+  const state = listenerApi.getState();
+
+  try {
+    localHistoryStorage.setObject('historyList', state.history.list);
+  } catch (error) {
+    console.error(error);
   }
-  return actionResult;
 };
 
-export default historyLocalStorageMiddleware;
+const listenerMiddleware = createListenerMiddleware();
+
+const startListening = listenerMiddleware.startListening as TAppStartListening;
+
+const actionMatcher = isAnyOf(setHistory, removeHistoryEntry, clearHistory);
+
+startListening({
+  matcher: actionMatcher,
+  effect: historyLocalStorageEffect,
+});
+
+export default listenerMiddleware.middleware;

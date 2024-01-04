@@ -8,7 +8,7 @@ const UseHistoryItem: FC<IProps> = ({ date, useSystem }) => {
   const disable = useAppSelector((state) => state.history.loading);
 
   const handleClick = useCallback(async () => {
-    await dispatch(initChatWithHistory(date, useSystem));
+    await dispatch(initChatWithHistory({ date, useSystem }));
   }, [date, dispatch, useSystem]);
 
   return (

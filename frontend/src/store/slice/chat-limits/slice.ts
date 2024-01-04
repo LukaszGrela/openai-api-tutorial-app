@@ -1,4 +1,6 @@
-import type { IChatLimitsState, TSetChatLimits, TSetChatUsage } from './types';
+import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+import type { IChatLimitsState } from './types';
+import type { TLimits, TUsage } from '../../../api/types';
 
 const initialState: IChatLimitsState = {
   limits: {
@@ -16,17 +18,17 @@ const initialState: IChatLimitsState = {
   },
 };
 
-const slice = (
-  state = initialState,
-  action: TSetChatLimits | TSetChatUsage
-): IChatLimitsState => {
-  if (action.type === 'chat-limits/SET_LIMITS') {
-    return { ...state, limits: action.payload };
-  }
-  if (action.type === 'chat-limits/SET_USAGE') {
-    return { ...state, usage: action.payload };
-  }
-  return state;
-};
+export const SLICE_NAME = 'chatLimits' as const;
 
-export default slice;
+export const chatLimits = createSlice({
+  name: SLICE_NAME,
+  initialState,
+  reducers: {
+    setChatLimits(state, action: PayloadAction<TLimits>) {
+      state.limits = action.payload;
+    },
+    setChatUsage(state, action: PayloadAction<TUsage>) {
+      state.usage = action.payload;
+    },
+  },
+});

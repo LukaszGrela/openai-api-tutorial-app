@@ -1,54 +1,53 @@
-import { Dispatch, Middleware } from 'redux';
-import { TAppState } from '../types';
 import {
-  THistoryActionUseFinish,
+  initChatWithHistory,
   removeHistoryEntry,
   setHistory,
   viewHistoryEntry,
-} from '../slice/history/actions';
+} from '../slice/history';
 import { setChatHistory } from '../slice/chat';
 import { setRoute } from '../slice/route';
+import { createListenerMiddleware } from '@reduxjs/toolkit';
+import type { TAppStartListening } from './types';
 
-const setChatHistoryMiddleware: Middleware<
-  unknown,
-  TAppState,
-  Dispatch<THistoryActionUseFinish>
-> = (storeApi) => (next) => (action) => {
-  const previousState = storeApi.getState();
-  const actionResult = next(action); // do the default
-  const reactToAction = action as THistoryActionUseFinish;
-  if (reactToAction.type === 'history/USE/finished') {
-    const {
-      data: { date, list },
-      useSystem,
-    } = reactToAction.payload;
+const listenerMiddleware = createListenerMiddleware();
+
+const startListening = listenerMiddleware.startListening as TAppStartListening;
+
+startListening({
+  actionCreator: initChatWithHistory.fulfilled,
+  effect: (action, listenerApi) => {
+    const previousState = listenerApi.getOriginalState();
+
+    const { date, list } = action.payload;
+    const { useSystem = false } = action.meta.arg;
 
     if (!useSystem) {
       // remove from history if it is not system
-      next(removeHistoryEntry(date));
+      listenerApi.dispatch(removeHistoryEntry(date));
       // set chat history
-      next(setChatHistory(list));
+      listenerApi.dispatch(setChatHistory(list));
     } else {
       // use only system message
-      next(setChatHistory(list.filter(({ role }) => role === 'system')));
+      listenerApi.dispatch(
+        setChatHistory(list.filter(({ role }) => role === 'system'))
+      );
     }
 
     // clear selection
-    next(viewHistoryEntry(undefined));
+    listenerApi.dispatch(viewHistoryEntry(undefined));
     // navigate to chat
-    next(setRoute('chat'));
+    listenerApi.dispatch(setRoute('chat'));
     // if current chat contains chat - save it
     if (previousState.chat.list.length > 2) {
-      next(
+      listenerApi.dispatch(
         setHistory({
-          date: new Date(),
+          date: new Date().getTime(),
           list: previousState.chat.list,
           usage: previousState.chatLimits.usage,
         })
       );
     }
-  }
-  return actionResult;
-};
+  },
+});
 
-export default setChatHistoryMiddleware;
+export default listenerMiddleware.middleware;

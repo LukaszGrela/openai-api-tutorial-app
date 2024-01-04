@@ -1,37 +1,41 @@
-import { Dispatch, Middleware } from 'redux';
-import { TAppState } from '../types';
-import {
-  TChatSendSystemPromptFinish,
-  TRestartActionFinish,
-} from '../slice/chat';
 import { setHistory } from '../slice/history';
+import { createListenerMiddleware, isAnyOf } from '@reduxjs/toolkit';
+import { TAppStartListening, TListenerEffect } from './types';
+import { restartChatAction, sendSystemPromptAction } from '../slice/chat';
 
-const storeHistoryMiddleware: Middleware<
-  unknown,
-  TAppState,
-  Dispatch<TChatSendSystemPromptFinish | TRestartActionFinish>
-> = (storeApi) => (next) => (action) => {
-  const reactToAction = action as
-    | TChatSendSystemPromptFinish
-    | TRestartActionFinish;
-  const previousState = storeApi.getState();
-  const actionResult = next(action); // do the default
+type TRestartChatFulfilled = ReturnType<typeof restartChatAction.fulfilled>;
+type TSendSystemPromptFulfilled = ReturnType<
+  typeof sendSystemPromptAction.fulfilled
+>;
 
-  if (
-    (reactToAction.type === 'chat/SEND_SYSTEM_PROMPT/finish' ||
-      reactToAction.type === 'chat/RESTART/finish') &&
-    previousState.chat.list.length > 2
-  ) {
-    next(
+const storeHistoryChatEffect: TListenerEffect<
+  TRestartChatFulfilled | TSendSystemPromptFulfilled
+> = (_, listenerApi) => {
+  const previousState = listenerApi.getOriginalState();
+
+  if (previousState.chat.list.length > 2) {
+    listenerApi.dispatch(
       setHistory({
-        date: new Date(),
+        date: new Date().getTime(),
         list: previousState.chat.list,
         usage: previousState.chatLimits.usage,
       })
     );
   }
-
-  return actionResult;
 };
 
-export default storeHistoryMiddleware;
+const listenerMiddleware = createListenerMiddleware();
+
+const startListening = listenerMiddleware.startListening as TAppStartListening;
+
+const actionMatcher = isAnyOf(
+  restartChatAction.fulfilled,
+  sendSystemPromptAction.fulfilled
+);
+
+startListening({
+  matcher: actionMatcher,
+  effect: storeHistoryChatEffect,
+});
+
+export default listenerMiddleware.middleware;

@@ -1,12 +1,15 @@
-import type { TRoute, TSetRoute } from './types';
+import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+import type { TRoute } from './types';
 
-const initialState: TRoute = 'chat';
+const initialState: TRoute = 'chat' as TRoute;
 
-const slice = (state = initialState, action: TSetRoute) => {
-  if (action.type === 'route/SET') {
-    return action.payload;
-  }
-  return state;
-};
-
-export default slice;
+export const SLICE_NAME = 'route' as const;
+export const route = createSlice({
+  name: SLICE_NAME,
+  initialState,
+  reducers: {
+    setRoute(_, action: PayloadAction<TRoute>) {
+      return action.payload;
+    },
+  },
+});
