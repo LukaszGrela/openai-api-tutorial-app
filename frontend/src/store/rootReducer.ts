@@ -1,16 +1,16 @@
 import { combineReducers } from 'redux';
-import { historySlice } from './slice/history';
-import { chatSlice } from './slice/chat';
-import { chatConfigurationSlice } from './slice/chat-configuration';
-import { chatLimitsSlice } from './slice/chat-limits';
-import { routeSlice } from './slice/route';
+import history from './slice/history';
+import chat from './slice/chat';
+import chatConfiguration from './slice/chat-configuration';
+import chatLimits from './slice/chat-limits';
+import route from './slice/route';
 
 const rootReducer = combineReducers({
-  chat: chatSlice,
-  chatConfiguration: chatConfigurationSlice,
-  chatLimits: chatLimitsSlice,
-  history: historySlice,
-  route: routeSlice,
+  chat,
+  chatConfiguration,
+  chatLimits,
+  history,
+  route,
 });
 
 export default rootReducer;

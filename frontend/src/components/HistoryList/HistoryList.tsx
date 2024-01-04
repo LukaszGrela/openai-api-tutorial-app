@@ -48,9 +48,9 @@ const HistoryList: FC = () => {
             <span className='tools'>Actions</span>
           </li>
           {list.map(({ date, list, usage }) => (
-            <li className='history-item' key={date.getTime()}>
+            <li className='history-item' key={date}>
               <span className='date'>
-                {date.toLocaleString(locale, dateConfig)}
+                {new Date(date).toLocaleString(locale, dateConfig)}
               </span>
               <span className='tokens'>{usage.total_tokens}</span>
               <span className='size'>{list.length}</span>

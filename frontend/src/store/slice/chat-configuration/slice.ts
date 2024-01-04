@@ -1,24 +1,23 @@
-import { IChatConfigurationState, TSetChatConfigurationAction } from './types';
+import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+import type {
+  IChatConfigurationState,
+  TSetChatConfigurationActionPayload,
+} from './types';
 
 const initialState: IChatConfigurationState = {
   temperature: 0,
 };
 
-const chatConfigurationSlice = (
-  state = initialState,
-  action: TSetChatConfigurationAction
-): IChatConfigurationState => {
-  switch (action.type) {
-    case 'chat-configuration/SET':
-      return {
-        ...state,
-        [action.payload.key]: action.payload.value,
-      };
-
-    default:
-      break;
-  }
-  return state;
-};
-
-export default chatConfigurationSlice;
+export const SLICE_NAME = 'chatConfiguration' as const;
+export const chatConfiguration = createSlice({
+  name: SLICE_NAME,
+  initialState,
+  reducers: {
+    setChatConfiguration(
+      state,
+      action: PayloadAction<TSetChatConfigurationActionPayload>
+    ) {
+      state[action.payload.key] = action.payload.value;
+    },
+  },
+});

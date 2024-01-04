@@ -1,4 +1,4 @@
 export interface IProps {
-  date: Date;
+  date: number;
   useSystem?: boolean;
 }
